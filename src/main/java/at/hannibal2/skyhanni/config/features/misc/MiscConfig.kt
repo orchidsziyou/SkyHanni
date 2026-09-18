@@ -52,6 +52,11 @@ class MiscConfig {
     @Category(name = "Navigation", desc = "Navigation features and other related settings.")
     val navigation: NavigationConfig = NavigationConfig()
 
+    @Expose
+    @ConfigOption(name = "Command Wheel", desc = "")
+    @Accordion
+    val commandWheel: CommandWheelConfig = CommandWheelConfig()
+
     @ConfigOption(name = "Hide Armor", desc = "")
     @Accordion
     @Expose
