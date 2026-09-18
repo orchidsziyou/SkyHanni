@@ -100,6 +100,22 @@ object MouseSensitivityReducer {
         return playerLocation().let { !BlockUtils.raycast(it, it.down(tolerance)).miss }
     }
 
+    private var previousManualState: SensitivityState? = null
+
+    /**
+     * Temporarily locks or unlocks the mouse for other features (e.g. the command wheel),
+     * restoring the previous manual state afterwards.
+     */
+    fun setTemporaryLock(locked: Boolean) {
+        if (locked) {
+            previousManualState = manualState
+            manualState = SensitivityState.LOCKED
+        } else {
+            manualState = previousManualState
+            previousManualState = null
+        }
+    }
+
     private fun setManualState(state: SensitivityState?, message: String? = null, configDisableOption: KProperty0<*>? = null) {
         manualState = state
 
