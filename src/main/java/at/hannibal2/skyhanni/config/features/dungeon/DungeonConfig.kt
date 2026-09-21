@@ -185,11 +185,6 @@ class DungeonConfig {
     val dungeonsRaceGuide: DungeonsRaceGuideConfig = DungeonsRaceGuideConfig()
 
     @Expose
-    @ConfigOption(name = "Spirit Leap", desc = "Configure the Spirit Leap feature to modify its behavior in-game.")
-    @Accordion
-    val spiritLeapOverlay: SpiritLeapConfig = SpiritLeapConfig()
-
-    @Expose
     @ConfigOption(
         name = "Spring Boots Notification",
         desc = "Shows sound and title when Spring Boots are charged up enough to reach the Crystals in phase 1 of the floor 7 boss fight.",
