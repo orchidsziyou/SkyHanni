@@ -7,6 +7,7 @@ import at.hannibal2.skyhanni.utils.SafeItemStack
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen
 import net.minecraft.client.gui.screens.inventory.ContainerScreen
+import net.minecraft.client.gui.screens.inventory.MenuAccess
 import net.minecraft.client.player.LocalPlayer
 import net.minecraft.world.inventory.AbstractContainerMenu
 import net.minecraft.world.inventory.ContainerInput
@@ -20,22 +21,26 @@ fun LocalPlayer.getItemOnCursor(): SafeItemStack? {
     return stack
 }
 
-fun stackUnderCursor(): SafeItemStack? {
-    val screen = MinecraftCompat.screen as? SkyHanniGuiContainer ?: return null
-    val stack = screen.hoveredSlot?.item
-    if (stack != null) return stack
-    return ReiCompat.getHoveredStackFromRei()
-}
-
-fun slotUnderCursor(): Slot? {
-    val screen = MinecraftCompat.screen as? SkyHanniGuiContainer ?: return null
-    return screen.hoveredSlot
-}
-
 val ContainerScreen.container: AbstractContainerMenu
     get() = this.menu
 
 object InventoryCompat {
+
+    /**
+     * Use [at.hannibal2.skyhanni.events.GuiKeyPressEvent.stackUnderCursor] instead when handling a
+     * [at.hannibal2.skyhanni.events.GuiKeyPressEvent].
+     */
+    fun stackUnderCursor(): SafeItemStack? {
+        val screen = MinecraftCompat.screen as? SkyHanniGuiContainer ?: return null
+        val stack = screen.hoveredSlot?.item
+        if (stack != null) return stack
+        return ReiCompat.getHoveredStackFromRei()
+    }
+
+    fun slotUnderCursor(): Slot? {
+        val screen = MinecraftCompat.screen as? SkyHanniGuiContainer ?: return null
+        return screen.hoveredSlot
+    }
 
     /**
      * Internal method, not meant to be called directly. Prefer [InventoryUtils.clickSlot].
@@ -43,7 +48,6 @@ object InventoryCompat {
     internal fun clickInventorySlot(windowId: Int, slotId: Int, mouseButton: Int, mode: ContainerInput) {
         val controller = Minecraft.getInstance().gameMode ?: return
         val player = MinecraftCompat.localPlayerOrNull ?: return
-        //~ if < 26.1 'handleContainerInput' -> 'handleInventoryMouseClick'
         controller.handleContainerInput(windowId, slotId, mouseButton, mode, player)
     }
 
@@ -63,7 +67,7 @@ object InventoryCompat {
         container.menu.slots
 
     fun getWindowIdOrNull(): Int? =
-        (MinecraftCompat.screen as? ContainerScreen)?.menu?.containerId
+        (MinecraftCompat.screen as? MenuAccess<*>)?.menu?.containerId
 
     fun getWindowId(): Int =
         getWindowIdOrNull() ?: ErrorManager.skyHanniError("windowId is null")
